@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Silent Grinders - Space Countdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Playfair+Display&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Merriweather', 'Playfair Display', serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    /* Star field background with subtle twinkling */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      /* create multiple small white dots as stars */
+      background:
+        radial-gradient(1.5px 1.5px at 10% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 23% 35%, #ccc, transparent),
+        radial-gradient(1.2px 1.2px at 40% 60%, #eee, transparent),
+        radial-gradient(1.5px 1.5px at 60% 25%, #ddd, transparent),
+        radial-gradient(1.3px 1.3px at 75% 75%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 45%, #bbb, transparent);
+      background-repeat: repeat;
+      background-size: 180px 180px;
+      animation: starTwinkle 10s infinite alternate ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes starTwinkle {
+      0% {
+        opacity: 0.85;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* Star shake subtle effect on container */
+    main.container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 4rem 1rem 6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+      text-align: center;
+      gap: 2rem;
+      position: relative;
+      z-index: 1;
+      animation: containerShake 10s ease-in-out infinite;
+    }
+    @keyframes containerShake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(1px, 0.5px); }
+      50% { transform: translate(-1px, -0.5px); }
+      75% { transform: translate(0.5px, -1px); }
+    }
+
+    /* Logo */
+    .logo {
+      width: 140px;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 0 6px #fff);
+      user-select: none;
+    }
+
+    /* Headline */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3.5rem;
+      color: #fff;
+      line-height: 1.1;
+      user-select: text;
+      /* subtle white glow for space vibe */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 10px #fff;
+    }
+
+    /* Countdown timer */
+    #countdown {
+      font-weight: 600;
+      font-size: 3rem;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.07em;
+      user-select: text;
+      text-shadow:
+        0 0 6px #fff;
+      font-family: 'Merriweather', serif;
+    }
+
+    /* Subtext lines */
+    .line {
+      font-size: 1.25rem;
+      max-width: 90%;
+      color: #ccc;
+      line-height: 1.5;
+      user-select: text;
+    }
+
+    /* Instagram follow note */
+    .instagram-note {
+      font-size: 1rem;
+      color: #fff;
+      user-select: text;
+      font-style: italic;
+      max-width: 320px;
+      margin-bottom: 0.25rem;
+    }
+
+    /* Mailing list form card - translucent black with blur */
+    .mailing-list {
+      background: rgba(255 255 255 / 0.05);
+      backdrop-filter: blur(6px);
+      box-shadow:
+        0 0 15px rgb(255 255 255 / 0.12);
+      border-radius: 0.75rem;
+      padding: 2rem 2.5rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    label {
+      font-weight: 600;
+      color: #fff;
+      text-align: left;
+      font-size: 1rem;
+      user-select: text;
+    }
+
+    input[type="email"] {
+      padding: 0.75rem 1rem;
+      border: 2px solid #fff;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      color: #fff;
+      background-color: transparent;
+      transition: border-color 0.3s ease;
+      caret-color: #fff;
+      font-family: 'Merriweather', serif;
+    }
+
+    input[type="email"]::placeholder {
+      color: rgba(255 255 255 / 0.6);
+    }
+
+    input[type="email"]:focus {
+      outline: none;
+      border-color: #fff;
+      box-shadow: 0 0 8px #fff;
+      background-color: rgba(255 255 255 0.1);
+    }
+
+    button {
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      font-size: 1.125rem;
+      color: #000;
+      background-color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+      /* subtle shadow */
+      box-shadow: 0 3px 8px rgba(255 255 255 / 0.4);
+      font-family: 'Merriweather', serif;
+    }
+
+    button:hover,
+    button:focus {
+      background-color: rgba(255 255 255 / 0.85);
+      color: #000;
+      outline: none;
+      box-shadow: 0 4px 12px rgba(255 255 255 / 0.7);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.75rem;
+      }
+      #countdown {
+        font-size: 2.25rem;
+      }
+      .mailing-list {
+        padding: 1.5rem 1.75rem;
+      }
+      .logo {
+        width: 120px;
+      }
+      .instagram-note {
+        max-width: 100%;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="Silent Grinders Countdown">
+    <img src="1.png" alt="Silent Grinders Logo" class="logo" />
+
+    <h1>🔒 LOCKEDIN</h1>
+
+    <div id="countdown" aria-live="polite" aria-atomic="true" aria-label="Countdown timer">
+      Loading timer...
+    </div>
+
+    <p class="line">This page is for the silent grinders.</p>
+    <p class="line">July 1st is just the first checkpoint.</p>
+
+    <div class="instagram-note">
+      Follow to be with the 0.1% .
+    </div>
+
+    <section class="mailing-list" aria-label="Subscribe to mailing list">
+      <form id="mailingListForm" novalidate>
+        <label for="emailInput">Let your email so we notify you when it's time</label>
+        <input
+          type="email"
+          id="emailInput"
+          name="email"
+          placeholder="Enter your email"
+          required
+          autocomplete="email"
+          aria-required="true"
+          spellcheck="false"
+          />
+        <button type="submit">Subscribe</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const countdownEl = document.getElementById('countdown');
+      const targetDate = new Date('2025-07-01T00:00:00').getTime();
+
+      function updateCountdown() {
+        const now = Date.now();
+        let distance = targetDate - now;
+
+        if(distance < 0) {
+          countdownEl.textContent = "Checkpoint hit. What have you built?";
+          return;
+        }
+
+        // Calculate days, hours, minutes, seconds
+        const totalSeconds = Math.floor(distance / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        const formatNum = n => n.toString().padStart(2,'0');
+
+        const timeString = `${days}d ${formatNum(hours)}h ${formatNum(minutes)}m ${formatNum(seconds)}s`;
+
+        countdownEl.textContent = timeString;
+      }
+
+      setInterval(updateCountdown, 1000);
+      updateCountdown();
+
+      // Mailing list subscription handler
+      const form = document.getElementById('mailingListForm');
+      form.addEventListener('submit', function(event){
+        event.preventDefault();
+        const emailInput = document.getElementById('emailInput');
+        const email = emailInput.value.trim();
+
+        if(!email) {
+          alert('Please enter a valid email address.');
+          return;
+        }
+
+        // For demo: log emails to console and alert user
+        console.log('New mailing list subscription:', email);
+        alert('Thank you for subscribing! We have received your email.');
+
+        // Reset form
+        form.reset();
+
+        // How to get those emails in practice:
+        // Typically you'd send this email to your backend server or a mailing list service like Mailchimp or ConvertKit via an API.
+        // Example (not included): 
+        // fetch('/api/subscribe', {
+        //   method: 'POST',
+        //   headers: {'Content-Type': 'application/json'},
+        //   body: JSON.stringify({email})
+        // });
+        // Here, emails are logged to the console for manual collection.
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
